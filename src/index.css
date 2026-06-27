@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Georgia", "Playfair Display", "Lora", serif;
+  --font-sans: "Inter", "Nunito", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  
+  --color-alabaster: #F9F6F0;
+  --color-sage: #4A7C59;
+  --color-terracotta: #E07A5F;
+  --color-charcoal: #2B2D42;
+  --color-parchment: #FAF6F0;
+  --color-warm-cream: #FAF7F2;
+
+  --shadow-paper: 2px 4px 0px rgba(43, 45, 66, 0.1);
+  --shadow-paper-hover: 4px 6px 0px rgba(43, 45, 66, 0.15);
+  --shadow-sticky: 3px 6px 0px rgba(224, 122, 95, 0.15);
+  
+  --shadow-flat-sage: 2px 4px 0px rgba(74, 124, 89, 0.3);
+  --shadow-flat-terracotta: 2px 4px 0px rgba(224, 122, 95, 0.3);
+}
+
+/* Base styling and grain overlay */
+body {
+  background-color: var(--color-alabaster);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Seamless subtle paper grain SVG filter */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Custom scrollbar for Scrapbook feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F2ECE1;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9CFC1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C3B7A5;
+}
+
+/* Handcrafted elements */
+.torn-border-bottom {
+  position: relative;
+}
+
+/* Wavy or deckled edge masking using inline SVGs */
+.deckled-mask {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 20' preserveAspectRatio='none'%3E%3Cpath d='M0,15 C150,18 350,2 600,12 C850,22 1050,4 1200,16 L1200,20 L0,20 Z' fill='black'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+}
+
+/* Vintage stamp hover effect */
+.btn-stamp {
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+}
+.btn-stamp:hover {
+  transform: translateY(-2px) rotate(-1deg);
+}
+.btn-stamp:active {
+  transform: translateY(1px) rotate(1deg);
+}
+
+/* Polaroid framing */
+.polaroid {
+  background-color: white;
+  padding: 12px 12px 24px 12px;
+  box-shadow: 3px 6px 18px rgba(43, 45, 66, 0.08);
+  border: 1px solid #ECE7DE;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.polaroid:hover {
+  box-shadow: 6px 12px 24px rgba(43, 45, 66, 0.15);
+}
+
+/* Sticky notes */
+.sticky-note {
+  background-color: #FEF9E7;
+  box-shadow: var(--shadow-sticky);
+  border-left: 3px solid var(--color-terracotta);
+}
+
+/* Hand-drawn underline */
+.sketchy-underline {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q50,9 100,3' stroke='%23E07A5F' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 100% 6px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  padding-bottom: 4px;
+}
+
+/* Pulsing highlight */
+@keyframes scribble-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.paper-card {
+  background-color: #FFFFFF;
+  border: 1px solid #EFEAE0;
+  box-shadow: var(--shadow-paper);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.paper-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-paper-hover);
+}
+
+/* Torn zigzag clip-path pattern from the design template */
+.torn-zigzag {
+  clip-path: polygon(0% 0%, 5% 100%, 10% 0%, 15% 90%, 20% 0%, 25% 100%, 30% 0%, 35% 85%, 40% 0%, 45% 100%, 50% 0%, 55% 95%, 60% 0%, 65% 100%, 70% 0%, 75% 90%, 80% 0%, 85% 100%, 90% 0%, 95% 85%, 100% 0%);
+}
+
+.deckled-edge {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 20' preserveAspectRatio='none'%3E%3Cpath d='M0,15 Q30,5 60,15 T120,15 T180,15 T240,15 T300,15 T360,15 T420,15 T480,15 T540,15 T600,15 T660,15 T720,15 T780,15 T840,15 T900,15 T960,15 T1020,15 T1080,15 T1140,15 T1200,15 L1200,20 L0,20 Z' fill='%23FBF9F5'/%3E%3C/svg%3E");
+}
+

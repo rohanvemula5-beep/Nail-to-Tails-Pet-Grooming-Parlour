@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account information.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "email", "phone", "role", "createdAt"]
+    },
+    "Pet": {
+      "title": "Pet",
+      "description": "A customer's pet profile.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "breed": { "type": "string" },
+        "age": { "type": "integer" },
+        "weightKg": { "type": "number" },
+        "medicalNotes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "type", "createdAt"]
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "A grooming session appointment.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "petName": { "type": "string" },
+        "petBreed": { "type": "string" },
+        "petType": { "type": "string" },
+        "serviceType": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "notes": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["ownerName", "petName", "petBreed", "petType", "serviceType", "date", "time", "status", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A grooming product in the inventory.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "stockQty": { "type": "integer" },
+        "imageUrl": { "type": "string" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["name", "category", "price", "stockQty"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "A salon review from a user or guest.",
+      "type": "object",
+      "properties": {
+        "guestName": { "type": "string" },
+        "rating": { "type": "integer" },
+        "comment": { "type": "string" },
+        "isApproved": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["guestName", "rating", "comment", "isApproved", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Customer and employee accounts."
+    },
+    "pets/{petId}": {
+      "schema": "Pet",
+      "description": "Customer pet profiles."
+    },
+    "appointments/{appointmentId}": {
+      "schema": "Appointment",
+      "description": "Scheduled grooming sessions."
+    },
+    "products/{productId}": {
+      "schema": "Product",
+      "description": "Grooming catalog and inventory."
+    },
+    "reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Customer salon feedback."
+    }
+  }
+}

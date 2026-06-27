@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if request is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper to verify user matches standard format
+    function isValidUser(data) {
+      return data.name is string &&
+             data.email is string &&
+             data.phone is string &&
+             data.role is string &&
+             data.createdAt is string;
+    }
+
+    // Match rules for users
+    match /users/{userId} {
+      allow read, write: if true; // In our applet, we keep it simple or allow all for local demo
+    }
+
+    // Match rules for pets
+    match /pets/{petId} {
+      allow read, write: if true;
+    }
+
+    // Match rules for appointments
+    match /appointments/{appointmentId} {
+      allow read, write: if true; // Let customers book and view appointments
+    }
+
+    // Match rules for products
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // Let clients/admin update inventory
+    }
+
+    // Match rules for reviews
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if true; // Allow guest review creation
+    }
+  }
+}

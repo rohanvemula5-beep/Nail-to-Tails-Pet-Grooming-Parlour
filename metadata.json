@@ -1,0 +1,6 @@
+{
+  "name": "Nail to Tails",
+  "description": "An artisanal premium pet grooming parlour with a warm paper aesthetic, featuring bookings, a Q&A chatbot, and an interactive AI Dog Style Lab and Coat Analyzer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
