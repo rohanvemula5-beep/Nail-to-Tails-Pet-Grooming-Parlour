@@ -6,6 +6,24 @@ import { createServer as createViteServer } from "vite";
 
 dotenv.config();
 
+function cleanAndParseJSON(text: string) {
+  if (!text) return null;
+  let cleanText = text.trim();
+  if (cleanText.startsWith("```json")) {
+    cleanText = cleanText.substring(7);
+  } else if (cleanText.startsWith("```")) {
+    cleanText = cleanText.substring(3);
+  }
+  if (cleanText.endsWith("```")) {
+    cleanText = cleanText.substring(0, cleanText.length - 3);
+  }
+  cleanText = cleanText.trim();
+  if (cleanText === "undefined" || cleanText === "") {
+    return null;
+  }
+  return JSON.parse(cleanText);
+}
+
 const app = express();
 const PORT = 3000;
 
@@ -251,8 +269,16 @@ app.post("/api/analyze-pet", async (req, res) => {
       return res.status(500).json({ error: "Empty analysis response received." });
     }
 
-    const result = JSON.parse(response.text.trim());
-    res.json(result);
+    try {
+      const result = cleanAndParseJSON(response.text);
+      if (!result) {
+        throw new Error("Parsed result is empty or invalid.");
+      }
+      res.json(result);
+    } catch (parseError: any) {
+      console.error("Failed to parse response JSON. Raw text:", response.text);
+      res.status(500).json({ error: `Invalid JSON response from model: ${parseError.message}` });
+    }
   } catch (error: any) {
     console.error("Error in /api/analyze-pet:", error);
     res.status(500).json({ error: error.message || "An error occurred during pet analysis." });
@@ -334,8 +360,16 @@ app.post("/api/grooming-plan", async (req, res) => {
       return res.status(500).json({ error: "Empty plan response received." });
     }
 
-    const result = JSON.parse(response.text.trim());
-    res.json(result);
+    try {
+      const result = cleanAndParseJSON(response.text);
+      if (!result) {
+        throw new Error("Parsed result is empty or invalid.");
+      }
+      res.json(result);
+    } catch (parseError: any) {
+      console.error("Failed to parse response JSON. Raw text:", response.text);
+      res.status(500).json({ error: `Invalid JSON response from model: ${parseError.message}` });
+    }
   } catch (error: any) {
     console.error("Error in /api/grooming-plan:", error);
     res.status(500).json({ error: error.message || "An error occurred during wellness plan generation." });

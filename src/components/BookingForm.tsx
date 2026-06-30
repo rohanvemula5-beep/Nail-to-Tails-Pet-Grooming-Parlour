@@ -35,10 +35,16 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
     // 1. Try loading from localStorage first for instant UI response
     const saved = localStorage.getItem('nail_tails_appointments');
     if (saved) {
-      try {
-        setAppointments(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse appointments", e);
+      const trimmed = saved.trim();
+      if (trimmed && trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) {
+            setAppointments(parsed);
+          }
+        } catch (e) {
+          console.warn("Failed to parse appointments from localStorage", e);
+        }
       }
     }
 

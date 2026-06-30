@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
 
 const firebaseConfig = {
   projectId: "gen-lang-client-0348426245",
@@ -13,7 +13,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+}, firebaseConfig.firestoreDatabaseId);
 
 async function testConnection() {
   try {

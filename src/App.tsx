@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from './components/Hero';
 import Services from './components/Services';
-import ScrapbookGallery from './components/ScrapbookGallery';
 import BookingForm from './components/BookingForm';
-import AIStyleLab from './components/AIStyleLab';
-import PhotoAnalyzer from './components/PhotoAnalyzer';
-import WellnessPlanDesigner from './components/WellnessPlanDesigner';
-import CareAssistant from './components/CareAssistant';
-import { Scissors, Sparkles, Heart, Footprints, MessageSquare, Award, Clock, HelpCircle } from 'lucide-react';
 
 export default function App() {
   const [selectedServiceId, setSelectedServiceId] = useState<'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim' | ''>('');
+
+  useEffect(() => {
+    // Force scroll to top immediately
+    window.scrollTo(0, 0);
+    
+    // Clear URL hash to prevent browser auto-scrolling to an element on load
+    if (window.location.hash) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {
+        console.warn('Could not clear URL hash:', e);
+      }
+    }
+
+    // Secondary delayed scroll to ensure any late-rendering components don't push the viewport down
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSelectService = (serviceId: 'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim') => {
     setSelectedServiceId(serviceId);
@@ -41,7 +56,7 @@ export default function App() {
     {
       petName: "Penelope",
       breed: "Bichon Frise Mix",
-      review: "The AI Style Lab is so cool! I generated a 'Bichon with a retro pearl necklace' and the stylist actually matched the rounded Teddy scissor cut perfectly on Penelope. Incredible care.",
+      review: "Our stylist did an absolute masterpiece on Penelope! The hand-scissored rounded Teddy cut is incredibly neat, fluffy, and stylish. They take such gentle and slow care of her.",
       parent: "David K.",
       tilt: "rotate-[2deg]"
     },
@@ -85,30 +100,6 @@ export default function App() {
             >
               Bookings
             </button>
-            <button 
-              onClick={() => handleScrollToSection('ai-lab-section')}
-              className="hover:text-sage transition-colors cursor-pointer"
-            >
-              Style Lab
-            </button>
-            <button 
-              onClick={() => handleScrollToSection('analyzer-section')}
-              className="hover:text-sage transition-colors cursor-pointer"
-            >
-              Coat Analyzer
-            </button>
-            <button 
-              onClick={() => handleScrollToSection('wellness-section')}
-              className="hover:text-sage transition-colors cursor-pointer"
-            >
-              Wellness Plan
-            </button>
-            <button 
-              onClick={() => handleScrollToSection('assistant-section')}
-              className="hover:text-sage transition-colors cursor-pointer"
-            >
-              Care Guides
-            </button>
           </nav>
 
           {/* Dynamic Top Book Button */}
@@ -124,14 +115,10 @@ export default function App() {
       {/* Hero Module */}
       <Hero 
         onBookClick={() => handleScrollToSection('booking-section')}
-        onExploreLabClick={() => handleScrollToSection('ai-lab-section')}
       />
 
       {/* Services Module */}
       <Services onSelectService={handleSelectService} />
-
-      {/* Scrapbook Photo Gallery */}
-      <ScrapbookGallery />
 
       {/* Testimonials Deck (Styled as colorful pinned scrap-paper stickies) */}
       <div className="py-20 bg-[#FCFAF6] border-b border-stone-200/50 relative">
@@ -192,18 +179,6 @@ export default function App() {
 
       {/* Booking Form Module */}
       <BookingForm selectedServiceId={selectedServiceId} />
-
-      {/* AI Style Lab Module */}
-      <AIStyleLab />
-
-      {/* Photo Analyzer Module */}
-      <PhotoAnalyzer />
-
-      {/* Wellness Regimen Designer Module */}
-      <WellnessPlanDesigner />
-
-      {/* Care Assistant Chat & Explorer Module */}
-      <CareAssistant />
 
       {/* Beautiful Printed Footer */}
       <footer className="bg-white border-t border-stone-200/40 py-16 px-6 relative mt-auto font-sans overflow-hidden">

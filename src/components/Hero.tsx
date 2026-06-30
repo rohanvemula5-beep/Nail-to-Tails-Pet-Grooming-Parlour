@@ -1,13 +1,12 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Sparkles, Calendar, Heart, ShieldCheck, Award } from 'lucide-react';
+import { Sparkles, Calendar, Heart, ShieldCheck, Award, Clock, MapPin } from 'lucide-react';
 
 interface HeroProps {
   onBookClick: () => void;
-  onExploreLabClick: () => void;
 }
 
-export default function Hero({ onBookClick, onExploreLabClick }: HeroProps) {
+export default function Hero({ onBookClick }: HeroProps) {
   return (
     <div className="relative pt-12 pb-24 md:pt-20 md:pb-32 overflow-hidden border-b border-stone-200/50">
       {/* Background accents representing paper snippets */}
@@ -49,8 +48,7 @@ export default function Hero({ onBookClick, onExploreLabClick }: HeroProps) {
           {/* Sub-headline & Premium pet care in Hyderabad */}
           <p className="text-stone-600 font-sans text-sm md:text-base max-w-xl leading-relaxed">
             Gentle, hygienic care for all breeds. Proudly grooming Hyderabad's pets since <strong className="text-charcoal font-semibold">2020</strong>. 
-            Experience premium pet care in Hyderabad with our customized, low-stress luxury sessions, pairing classic artisanal methods with our interactive 
-            <span className="text-sage font-bold"> AI Grooming & Style Lab</span>.
+            Experience premium pet care in Hyderabad with our customized, low-stress luxury sessions, pairing classic artisanal methods with dedicated wellness regimens.
           </p>
 
           {/* Key Trust Badges */}
@@ -82,82 +80,87 @@ export default function Hero({ onBookClick, onExploreLabClick }: HeroProps) {
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto">
             <button
               onClick={onBookClick}
-              className="px-8 py-3.5 bg-terracotta text-white font-bold rounded-sm shadow-flat-terracotta hover:translate-y-[-1px] transition-all btn-stamp text-center cursor-pointer flex items-center justify-center gap-2 text-xs uppercase tracking-wider"
+              className="px-8 py-3.5 bg-terracotta text-white font-bold rounded-sm shadow-flat-terracotta hover:translate-y-[-1px] transition-all btn-stamp text-center cursor-pointer flex items-center justify-center gap-2 text-xs uppercase tracking-wider animate-pulse"
               id="hero-book-btn"
             >
               <Calendar className="w-4 h-4" />
               Book Appointment
             </button>
-            <button
-              onClick={onExploreLabClick}
-              className="px-8 py-3.5 bg-sage text-white font-bold rounded-sm shadow-flat-sage hover:translate-y-[-1px] transition-all btn-stamp text-center cursor-pointer flex items-center justify-center gap-2 text-xs uppercase tracking-wider"
-              id="hero-lab-btn"
-            >
-              <Sparkles className="w-4 h-4" />
-              Interactive Style Lab
-            </button>
           </div>
         </div>
 
-        {/* Polaroid Graphic Area */}
-        <div className="lg:col-span-5 relative flex justify-center py-8">
-          {/* Background torn cardboard frame piece */}
-          <div className="absolute top-[20px] left-[15px] w-full h-[380px] bg-stone-200/40 rounded border border-stone-300/20 rotate-[-4deg] -z-10 pointer-events-none" />
+        {/* Elegant Parlour Spotlights Board (No Stock Images) */}
+        <div className="lg:col-span-5 relative py-8">
+          {/* Background scrap cardboard drop shadow look */}
+          <div className="absolute top-[20px] left-[15px] w-full h-[380px] bg-stone-200/40 rounded border border-stone-300/20 rotate-[-2deg] -z-10 pointer-events-none" />
           
-          {/* Main Polaroid */}
           <motion.div 
-            className="polaroid rotate-[2deg] relative z-10 w-full max-w-sm"
+            className="paper-card bg-[#FCFAF6] border border-stone-200 p-8 rounded-sm shadow-md rotate-[1deg] relative text-left"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, cubicBezier: [0.16, 1, 0.3, 1] }}
           >
-            {/* Soft-focus golden retriever being groomed, custom torn-paper style frame wrapper */}
-            <div className="relative overflow-hidden aspect-square rounded-sm border border-stone-100 bg-stone-50">
-              <img 
-                src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=600" 
-                alt="Groomed Happy Golden Retriever" 
-                className="w-full h-full object-cover grayscale-[10%] hover:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-stone-700/5 mix-blend-multiply" />
-              
-              {/* Overlaid simulated hand-written marker label */}
-              <div className="absolute bottom-2 left-2 bg-stone-900/60 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded font-mono">
-                Happy client after a lavender spa cut
+            {/* Stamp decoration */}
+            <div className="absolute top-4 right-4 bg-sage/10 text-sage text-[10px] px-3 py-1 rounded font-mono font-bold uppercase border border-sage/20 rotate-3">
+              Premium Care
+            </div>
+
+            <h3 className="font-serif text-2xl font-normal italic text-charcoal mb-6 border-b border-stone-200/60 pb-3 flex items-center gap-2">
+              <span>📍</span> Parlour Spotlight
+            </h3>
+
+            <div className="space-y-5">
+              {/* Working Hours status */}
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-sage/10 border border-sage/20 flex items-center justify-center text-sage shrink-0 mt-0.5">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-charcoal">Daily Grooming Hours</h4>
+                  <p className="text-stone-500 text-xs mt-0.5">8:30 AM – 9:00 PM (Tuesdays until 9:30 PM)</p>
+                </div>
+              </div>
+
+              {/* Quiet environment */}
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 border border-terracotta/20 flex items-center justify-center text-terracotta shrink-0 mt-0.5">
+                  <Heart className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-charcoal">Low-Stress, Cage-Free</h4>
+                  <p className="text-stone-500 text-xs mt-0.5">Spacious, calm setup tailored specifically to alleviate vet or grooming anxieties.</p>
+                </div>
+              </div>
+
+              {/* Ingredients */}
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shrink-0 mt-0.5">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-charcoal">Biodegradable Botanicals</h4>
+                  <p className="text-stone-500 text-xs mt-0.5">We use strictly premium, hypo-allergenic organic shampoos and nourishing skin balms.</p>
+                </div>
+              </div>
+
+              {/* Location pin */}
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#E6E0D4] border border-stone-300 flex items-center justify-center text-stone-600 shrink-0 mt-0.5">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-charcoal">Saroor Nagar, Hyderabad</h4>
+                  <p className="text-stone-500 text-xs mt-0.5">Conveniently situated at Pragati Nagar, near Sharada Theatre Road.</p>
+                </div>
               </div>
             </div>
-            
-            {/* Write-on polaroid label */}
-            <div className="mt-5 text-center">
-              <p className="font-serif italic text-stone-700 text-lg">“Nail to Tails signature finish”</p>
-              <p className="text-[11px] text-stone-400 font-mono mt-1 uppercase tracking-wider">Premium Bath &amp; Style Session</p>
+
+            {/* Handwriting stamp signature at the bottom */}
+            <div className="mt-8 border-t border-dashed border-stone-200 pt-4 flex items-center justify-between text-[11px] text-stone-400 font-mono">
+              <span>ESTD. 2020 • HYDERABAD</span>
+              <span className="text-terracotta font-semibold">🐾 Nail to Tails Parlour</span>
             </div>
           </motion.div>
-
-          {/* Secondary mini polaroid popping out from bottom-left */}
-          <motion.div 
-            className="polaroid absolute bottom-[-10px] left-[-20px] w-36 rotate-[-12deg] z-20 hidden sm:block shadow-lg"
-            initial={{ opacity: 0, scale: 0.8, rotate: -20 }}
-            animate={{ opacity: 1, scale: 1, rotate: -12 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            <div className="aspect-square bg-stone-50 overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300" 
-                alt="Happy Dog after bath"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div className="mt-2 text-center">
-              <p className="font-mono text-[9px] text-stone-500 uppercase">Leo (Teddy Cut)</p>
-            </div>
-          </motion.div>
-
-          {/* Secondary sticker detail */}
-          <div className="absolute top-0 right-4 bg-[#FEF9E7] border border-orange-200 shadow-md px-4 py-2 rotate-[-8deg] z-20 text-[11px] font-sans font-semibold text-terracotta rounded">
-            ✨ Organic Lavender Bath
-          </div>
         </div>
       </div>
 
