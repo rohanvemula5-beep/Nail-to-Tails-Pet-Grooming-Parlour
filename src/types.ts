@@ -4,6 +4,8 @@ export interface Appointment {
   petName: string;
   petBreed: string;
   petType: 'dog' | 'cat' | 'other';
+  location?: string;
+  phone: string;
   serviceType: 'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim';
   date: string;
   time: string;

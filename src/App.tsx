@@ -1,10 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import Hero from './components/Hero';
+import About from './components/About';
 import Services from './components/Services';
+import Pricing from './components/Pricing';
+import Gallery from './components/Gallery';
+import Team from './components/Team';
 import BookingForm from './components/BookingForm';
+import { Moon, Sun } from 'lucide-react';
 
 export default function App() {
   const [selectedServiceId, setSelectedServiceId] = useState<'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim' | ''>('');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(prev => !prev);
 
   useEffect(() => {
     // Force scroll to top immediately
@@ -44,36 +69,38 @@ export default function App() {
     }
   };
 
-  // Testimonials modeled as scrap sticky notes
   const reviewsList = [
     {
-      petName: "Barnaby",
-      breed: "Golden Retriever",
-      review: "Absolutely magical! Barnaby usually shakes when entering groomers, but the slow, lavender-scented environment at Nail to Tails had him sleeping during his brushing. 10/10!",
+      petName: "Puppy Rocky",
+      location: "Saroor Nagar",
+      review: "Absolutely magical! Rocky usually shakes when entering groomers, but the calm environment at Nail to Tails had him relaxed during his brushing. 10/10!",
       parent: "Theresa M.",
-      tilt: "rotate-[-1.5deg]"
     },
     {
-      petName: "Penelope",
-      breed: "Bichon Frise Mix",
-      review: "Our stylist did an absolute masterpiece on Penelope! The hand-scissored rounded Teddy cut is incredibly neat, fluffy, and stylish. They take such gentle and slow care of her.",
+      petName: "Mittens",
+      location: "LB Nagar",
+      review: "Our stylist did a masterpiece on Mittens! The gentle bath was incredibly neat and fluffy. They take such gentle and slow care of her.",
       parent: "David K.",
-      tilt: "rotate-[2deg]"
     },
     {
       petName: "Winston",
-      breed: "Cockapoo",
-      review: "Highly recommend the High Thinking Wellness Plan! The detailed product and dietary advice totally solved Winston's itchy summer skin. True artisanal care.",
+      location: "Dilsukhnagar",
+      review: "Highly recommend their spa treatment! The detailed product and dietary advice totally solved Winston's itchy summer skin. True artisanal care.",
       parent: "Clara V.",
-      tilt: "rotate-[-1deg]"
+    },
+    {
+      petName: "Bella",
+      location: "Saroor Nagar",
+      review: "A beautiful space for grooming. Cage-free and stress-free. I will definitely be bringing Bella back for her regular trims.",
+      parent: "Kiran R.",
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col relative" id="app-root">
       
-      {/* Top Scrapbook Header Navigation Bar */}
-      <header className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-stone-200/50 z-50 py-3.5 px-6 shadow-xs">
+      {/* Top Header Navigation Bar */}
+      <header className="sticky top-0 bg-white/90 dark:bg-[#1a1b26]/90 backdrop-blur-md border-b border-stone-200/50 dark:border-stone-800/50 z-50 py-3.5 px-6 shadow-xs transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           {/* Elegant Logo */}
@@ -81,13 +108,25 @@ export default function App() {
             <div className="w-10 h-10 bg-terracotta rounded-full flex items-center justify-center text-white shadow-sm font-bold text-lg animate-pulse">
               🐾
             </div>
-            <span className="text-xl font-bold text-charcoal tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
-              Nail to Tails
+            <span className="text-xl font-bold text-charcoal dark:text-stone-100 tracking-tight font-serif transition-colors">
+              Nail to Tails Pet Grooming Parlour
             </span>
           </div>
 
-          {/* Quick scroll list to comply with single view boundaries */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono font-bold text-stone-500 uppercase tracking-widest">
+          {/* Navigation */}
+          <nav className="hidden lg:flex items-center gap-8 text-xs font-mono font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest transition-colors">
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="hover:text-sage transition-colors cursor-pointer"
+            >
+              Home
+            </button>
+            <button 
+              onClick={() => handleScrollToSection('about-section')}
+              className="hover:text-sage transition-colors cursor-pointer"
+            >
+              About
+            </button>
             <button 
               onClick={() => handleScrollToSection('services-section')}
               className="hover:text-sage transition-colors cursor-pointer"
@@ -95,20 +134,41 @@ export default function App() {
               Services
             </button>
             <button 
+              onClick={() => handleScrollToSection('pricing-section')}
+              className="hover:text-sage transition-colors cursor-pointer"
+            >
+              Pricing
+            </button>
+            <button 
+              onClick={() => handleScrollToSection('gallery-section')}
+              className="hover:text-sage transition-colors cursor-pointer"
+            >
+              Gallery
+            </button>
+            <button 
               onClick={() => handleScrollToSection('booking-section')}
               className="hover:text-sage transition-colors cursor-pointer"
             >
-              Bookings
+              Contact
             </button>
           </nav>
 
-          {/* Dynamic Top Book Button */}
-          <button
-            onClick={() => handleScrollToSection('booking-section')}
-            className="px-6 py-2 bg-sage text-white text-xs font-bold rounded-sm shadow-flat-sage hover:translate-y-[-1px] transition-all btn-stamp cursor-pointer"
-          >
-            Book Visit
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-stone-500 hover:text-charcoal dark:hover:text-stone-300 transition-colors cursor-pointer rounded-full hover:bg-stone-100 dark:hover:bg-stone-800"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            {/* Top Book Button */}
+            <button
+              onClick={() => handleScrollToSection('booking-section')}
+              className="hidden sm:block px-6 py-2.5 bg-sage text-white text-xs font-bold rounded shadow-sm hover:-translate-y-[1px] transition-all uppercase tracking-wider cursor-pointer"
+            >
+              Book Now
+            </button>
+          </div>
         </div>
       </header>
 
@@ -117,129 +177,124 @@ export default function App() {
         onBookClick={() => handleScrollToSection('booking-section')}
       />
 
+      {/* About Module */}
+      <About />
+
       {/* Services Module */}
-      <Services onSelectService={handleSelectService} />
+      <Services />
 
-      {/* Testimonials Deck (Styled as colorful pinned scrap-paper stickies) */}
-      <div className="py-20 bg-[#FCFAF6] border-b border-stone-200/50 relative">
+      {/* Pricing Module */}
+      <Pricing />
+
+      {/* Gallery Module */}
+      <Gallery />
+
+      {/* Team / Parlour Module */}
+      <Team />
+
+      {/* Testimonials */}
+      <div className="py-24 bg-white dark:bg-[#1a1b26] border-b border-stone-200/50 dark:border-stone-800/50 transition-colors">
         <div className="max-w-7xl mx-auto px-6">
-          
-          {/* Header */}
-          <div className="text-center max-w-xl mx-auto mb-16 relative">
-            <div className="inline-block bg-orange-100/50 text-amber-800 border border-orange-200 text-xs uppercase tracking-widest px-3 py-1 rounded rotate-[1deg] mb-3 font-mono">
-              ❤️ Family Love Notes ❤️
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-2xl mx-auto mb-16"
+          >
+            <div className="inline-block bg-[#FAF0E6] dark:bg-amber-900/20 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-700/30 text-xs uppercase tracking-widest px-4 py-1.5 rounded mb-4 font-mono shadow-sm transition-colors">
+              Testimonials
             </div>
-            <h3 className="font-serif text-2xl md:text-3xl font-bold text-charcoal">
-              Pinned Salon Feedback
-            </h3>
-            <p className="text-stone-500 text-xs font-sans mt-2">
-              Real opinions pinned to our corkboard by local pet parents. We prioritize comfort above all.
-            </p>
-          </div>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-charcoal dark:text-stone-100 transition-colors">
+              Loved by Hyderabad pet parents
+            </h2>
+          </motion.div>
 
-          {/* corkboard grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {reviewsList.map((rev, idx) => (
-              <div 
+              <motion.div 
                 key={idx} 
-                className={`sticky-note p-6 rounded relative min-h-[220px] flex flex-col justify-between text-left ${rev.tilt} hover:scale-103 hover:shadow-lg transition-transform duration-300`}
-                style={{
-                  backgroundColor: idx % 2 === 0 ? '#FEFDF0' : '#F6FAF7',
-                  borderLeftColor: idx % 2 === 0 ? 'var(--color-terracotta)' : 'var(--color-sage)'
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-stone-50 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700 p-6 rounded relative hover:-translate-y-1 transition-all duration-300"
               >
-                {/* Decorative pushed push-pin in the center top */}
-                <div className="absolute top-[-8px] left-[50%] transform translate-x-[-50%] w-4 h-4 bg-red-500 rounded-full border border-red-600 shadow-md flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-red-300 rounded-full" />
-                </div>
-
-                <div>
-                  {/* Paw Print Badge */}
-                  <div className="flex items-center gap-1.5 mb-3 border-b border-dashed border-stone-300 pb-2">
-                    <span className="text-base select-none">🐾</span>
-                    <span className="font-serif font-bold text-sm text-charcoal">{rev.petName}</span>
-                    <span className="text-[10px] font-mono text-stone-400">({rev.breed})</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-1 text-amber-500 text-sm">
+                    ★★★★★
                   </div>
-
-                  <p className="text-xs text-stone-600 font-sans italic leading-relaxed">
-                    &ldquo;{rev.review}&rdquo;
-                  </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-dashed border-stone-200/50 flex justify-between items-center text-[10px] text-stone-400 font-mono">
-                  <span>PARENT: {rev.parent}</span>
-                  <span className="text-amber-500 text-xs">★★★★★</span>
+                <p className="text-sm text-stone-600 dark:text-stone-300 font-sans leading-relaxed mb-6 transition-colors">
+                  "{rev.review}"
+                </p>
+
+                <div className="mt-auto border-t border-stone-200 dark:border-stone-700 pt-4 transition-colors">
+                  <p className="font-bold text-charcoal dark:text-stone-200 text-sm transition-colors">{rev.petName}</p>
+                  <p className="text-[10px] uppercase font-mono text-stone-500 dark:text-stone-400 transition-colors">{rev.location}</p>
+                  <p className="text-[10px] uppercase font-mono text-stone-400 dark:text-stone-500 mt-1 transition-colors">Parent: {rev.parent}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-
         </div>
       </div>
 
       {/* Booking Form Module */}
       <BookingForm selectedServiceId={selectedServiceId} />
 
-      {/* Beautiful Printed Footer */}
-      <footer className="bg-white border-t border-stone-200/40 py-16 px-6 relative mt-auto font-sans overflow-hidden">
-        {/* Dynamic torn zigzag edge representing the scrapbook paper tear */}
-        <div className="absolute top-0 left-0 right-0 h-4 bg-[#FBF9F5] torn-zigzag"></div>
-        
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 mt-4 text-left">
-          {/* Logo & Description */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-1.5 font-bold text-charcoal text-base" style={{ fontFamily: 'Georgia, serif' }}>
-              <span>🐾</span>
-              <span>Nail to Tails Pet Grooming Parlour</span>
+      {/* Footer */}
+      <footer className="bg-charcoal text-white py-16 px-6 relative mt-auto font-sans">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
+          
+          <div className="space-y-4">
+            <div className="font-bold text-lg font-serif">
+              Nail to Tails Pet Grooming Parlour
             </div>
-            <p className="text-stone-500 text-xs leading-relaxed">
-              Premium, stress-free grooming in Saroor Nagar, Hyderabad. We believe that professional, hand-scissored styling should always come with gentle patience, organic ingredients, and custom-styled luxury. Est. 2020.
+            <p className="text-stone-400 text-xs leading-relaxed max-w-sm">
+              Premium, stress-free grooming in Saroor Nagar, Hyderabad. We believe in gentle patience, organic ingredients, and custom-styled luxury for your beloved pets.
             </p>
-            <div className="pt-2">
-              <a 
-                href="https://instagram.com/nailtotails" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-terracotta font-mono font-bold"
-              >
-                <span className="text-sm">📸</span>
-                @nailtotails on Instagram
-              </a>
-            </div>
           </div>
 
-          {/* Exact Address & Contact */}
-          <div className="lg:col-span-4 space-y-4 text-xs font-mono">
-            <h4 className="font-bold text-charcoal uppercase tracking-wider text-[10px] border-b border-dashed border-stone-200 pb-2">📍 Parlour Location</h4>
-            <p className="text-stone-600 leading-relaxed font-sans text-xs">
-              <strong>Nail to Tails Pet Grooming Parlour</strong><br />
+          <div className="space-y-4 text-sm text-stone-300">
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">Location</h4>
+            <p className="leading-relaxed">
               11-110 P&T Colony, Pragati Nagar,<br />
               Sharada Theatre Rd, Saroor Nagar,<br />
               Hyderabad – 500035, Telangana.
             </p>
-            <div className="pt-2 font-sans">
-              <span className="font-mono font-bold text-[10px] uppercase block text-stone-400 mb-1">🕒 Working Hours</span>
-              <p className="text-stone-600 text-xs font-medium">Monday – Sunday | 8:30 AM to 9:00 PM</p>
-              <p className="text-[11px] text-terracotta italic mt-0.5">(Note: Tuesdays open until 9:30 PM)</p>
-            </div>
           </div>
 
-          {/* Action CTA & Copyright */}
-          <div className="lg:col-span-4 flex flex-col justify-between items-start lg:items-end space-y-6">
-            <div className="w-full text-left lg:text-right">
-              <h4 className="font-mono font-bold text-[10px] uppercase text-stone-400 tracking-wider mb-2">Book via phone or WhatsApp</h4>
-              <a
-                href="tel:+919000012345"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-terracotta text-white font-bold rounded-sm shadow-flat-terracotta hover:translate-y-[-1px] transition-all btn-stamp uppercase tracking-widest text-xs cursor-pointer"
-              >
-                📞 Call Now to Book
-              </a>
-            </div>
+          <div className="space-y-4 text-sm text-stone-300">
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">Contact</h4>
+            <p className="leading-relaxed flex flex-col gap-1">
+              <span>Phone: +91 90000 12345</span>
+              <span>WhatsApp: +91 90000 12345</span>
+            </p>
+          </div>
 
-            <div className="text-[11px] text-stone-400 font-mono text-left lg:text-right">
-              &copy; {new Date().getFullYear()} Nail to Tails. Crafted with organic love.<br />
-              Hyderabad's Premier Pet Care Sanctuary.
-            </div>
+          <div className="space-y-4 text-sm text-stone-300">
+            <h4 className="font-bold text-white uppercase tracking-wider text-xs font-mono">Social</h4>
+            <a 
+              href="https://instagram.com/nailtotails" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              Instagram @nailtotails
+            </a>
+          </div>
+
+        </div>
+
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-stone-700/50 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-stone-500 uppercase tracking-widest font-mono">
+          <div>
+            &copy; {new Date().getFullYear()} Nail to Tails Pet Grooming Parlour – All rights reserved.
+          </div>
+          <div className="flex gap-4">
+            <a href="#" className="hover:text-stone-300">Privacy Policy</a>
+            <a href="#" className="hover:text-stone-300">Terms &amp; Conditions</a>
           </div>
         </div>
       </footer>

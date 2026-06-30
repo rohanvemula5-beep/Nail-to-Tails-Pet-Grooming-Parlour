@@ -1,188 +1,128 @@
 import React from 'react';
-import { Scissors, Bath, Sparkles, Footprints, Clock, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Bath, Scissors, Sparkles, Heart } from 'lucide-react';
 
-interface Service {
-  id: 'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim';
-  name: string;
-  price: string;
-  duration: string;
-  description: string;
-  includes: string[];
-  icon: React.ReactNode;
-  tag?: string;
-  targetBreedSize?: string;
-}
-
-interface ServicesProps {
-  onSelectService: (serviceId: 'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim') => void;
-}
-
-export default function Services({ onSelectService }: ServicesProps) {
-  const servicesList: Service[] = [
+export default function Services() {
+  const servicesList = [
     {
-      id: 'bath_brush',
-      name: 'Basic Bath & Brush',
-      targetBreedSize: 'Small / Medium / Large',
-      price: '₹600 – ₹1,400+',
-      duration: '45 – 60 mins',
-      description: 'Perfect for regular maintenance, coat shedding reduction, and a clean, fresh-scented pet.',
+      id: 'dog_basic',
+      name: 'Dog Grooming – Basic Groom',
+      description: 'Essential hygiene and refreshing care for your dog.',
       includes: [
-        'Professional bathing with organic shampoo',
-        'Complete high-velocity blow-dry',
-        'Comprehensive full brush-out',
-        'Nail trim & claw clipping',
-        'Ear cleaning & sanitation'
+        'Bath with organic shampoo',
+        'Blow dry & thorough brushing',
+        'Nail trimming & ear cleaning',
       ],
+      note: 'Ideal for regular upkeep.',
       icon: <Bath className="w-6 h-6 text-sage" />,
+      image: 'https://images.unsplash.com/photo-1606425271394-c3ca9aa1fc06?auto=format&fit=crop&w=600&q=80'
     },
     {
-      id: 'full_groom',
-      name: 'Full Grooming',
-      targetBreedSize: 'Small / Medium / Large',
-      price: '₹900 – ₹2,200+',
-      duration: '90 – 120 mins',
-      description: 'Our full signature pamper package. Includes custom structural haircut designed specifically for breed or lifestyle.',
+      id: 'dog_advanced',
+      name: 'Dog Grooming – Full Groom',
+      description: 'Comprehensive styling and full body treatment.',
       includes: [
-        'Gentle bath & blow-dry',
-        'Custom breed-specific haircut & styling',
-        'Nail clipping & diamond dremel filing',
-        'Ear cleaning & internal hair trim',
-        'Sanitary area clip & paw balm hydration'
+        'Everything in Basic Groom',
+        'Full body haircut & styling',
+        'Sanitary trim & paw pad clearing',
       ],
+      note: 'Perfect for long‑coated dogs.',
       icon: <Scissors className="w-6 h-6 text-terracotta" />,
-      tag: 'Most Popular',
+      image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80'
     },
     {
-      id: 'spa_package',
-      name: 'Feline Full Groom',
-      targetBreedSize: 'Cats (All Sizes)',
-      price: '₹1,400 – ₹2,000+',
-      duration: '75 – 90 mins',
-      description: 'The ultimate therapeutic renewal for cats. Gentle, low-stress handling with quiet specialized tools.',
+      id: 'spa_wellness',
+      name: 'Spa & Wellness Treatments',
+      description: 'Specialized therapies for skin, coat, and relaxation.',
       includes: [
-        'Gentle botanical water-less or warm-water bath',
-        'Full trim or stylish lion cut',
-        'Safety claw trimming',
-        'Gentle ear care & wax clearing',
-        'Scentless skin-soothing conditioning'
+        'Aromatherapy & deep conditioning',
+        'Paw butter massage',
+        'Safe tick & flea treatments',
       ],
-      icon: <Sparkles className="w-6 h-6 text-indigo-600" />,
-      tag: 'Feline Special',
+      note: 'A luxurious treat for stressed skin.',
+      icon: <Heart className="w-6 h-6 text-amber-600" />,
+      image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=600&q=80'
     },
     {
-      id: 'nail_trim',
-      name: 'Essential Add-ons',
-      targetBreedSize: 'All Pets',
-      price: 'From ₹150+',
-      duration: '15 – 30 mins',
-      description: 'Quick-access care focusing exclusively on keeping feet, ears, and skin healthy, clean, and irritation-free.',
+      id: 'cat_grooming',
+      name: 'Cat Grooming',
+      description: 'Quiet, low-stress handling tailored for felines.',
       includes: [
-        'Gentle nail trimming (₹150)',
-        'Detailed ear cleaning & wash (₹150)',
-        'Medicated tick & flea skin rinse (₹300)',
-        'Express sanitary scissor trim (₹250)'
+        'Waterless or gentle bath',
+        'De-matting & brushing',
+        'Nail trim & ear cleaning',
       ],
-      icon: <Footprints className="w-6 h-6 text-amber-600" />,
+      note: 'Calm approach for sensitive cats.',
+      icon: <Sparkles className="w-6 h-6 text-indigo-500" />,
+      image: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=600&q=80'
     }
   ];
 
   return (
-    <div className="py-20 bg-stone-50 relative border-b border-stone-200/50" id="services-section">
+    <div id="services-section" className="py-24 bg-white dark:bg-[#1a1b26] relative border-b border-stone-200/50 dark:border-stone-800/50 transition-colors">
       <div className="max-w-7xl mx-auto px-6">
         
-        {/* Header with paper ribbon decoration */}
-        <div className="text-center max-w-2xl mx-auto mb-16 relative">
-          <div className="inline-block bg-[#FAF0E6] text-amber-800 border border-amber-200 text-xs uppercase tracking-widest px-4 py-1.5 rounded rotate-[-2deg] mb-4 font-mono shadow-xs">
-            ✨ Artisanal Parlour Offerings ✨
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-16 relative"
+        >
+          <div className="inline-block bg-[#FAF0E6] dark:bg-amber-900/20 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-700/30 text-xs uppercase tracking-widest px-4 py-1.5 rounded mb-4 font-mono shadow-sm transition-colors">
+            Our Offerings
           </div>
-          <h2 className="font-serif text-3xl md:text-4xl font-normal italic text-charcoal">
-            Tailored Grooming Packages
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-charcoal dark:text-stone-100 transition-colors">
+            Premium Salon Services
           </h2>
-          <p className="text-stone-500 font-sans mt-3 text-sm md:text-base">
-            We use only 100% biodegradable, hypoallergenic extracts. Each appointment is scheduled with a spacious time window to eliminate rush.
+          <p className="text-stone-500 dark:text-stone-400 font-sans mt-4 text-sm md:text-base leading-relaxed transition-colors">
+            We use only 100% organic, hypoallergenic products. Every session is cage-free and focuses on your pet's comfort and well-being.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {servicesList.map((service) => (
-            <div 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {servicesList.map((service, idx) => (
+            <motion.div 
               key={service.id} 
-              className="paper-card rounded-sm flex flex-col justify-between h-full relative overflow-hidden"
-              style={{
-                background: '#FFFFFF',
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="bg-stone-50 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700 rounded flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group overflow-hidden"
             >
-              {service.tag && (
-                <div className={`absolute top-4 right-[-35px] rotate-[40deg] text-[8px] font-mono font-bold tracking-wider text-white uppercase px-10 py-1 ${
-                  service.id === 'spa_package' ? 'bg-sage' : 'bg-terracotta'
-                } shadow-sm`}>
-                  {service.tag}
-                </div>
-              )}
-
-              <div className="p-6">
-                {/* Vintage Line Stamp Icon border */}
-                <div className="w-12 h-12 rounded-sm bg-stone-50 flex items-center justify-center border border-stone-200/60 shadow-inner mb-4">
+              {/* Thumbnail Image */}
+              <div className="h-48 w-full relative overflow-hidden">
+                <img 
+                  src={service.image} 
+                  alt={service.name} 
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white dark:bg-stone-800 flex items-center justify-center shadow-md transition-colors">
                   {service.icon}
                 </div>
+              </div>
 
-                <h3 className="font-serif text-xl font-bold text-charcoal leading-snug mb-1">
+              <div className="p-6 flex-1 flex flex-col">
+                <h3 className="font-serif text-xl font-bold text-charcoal dark:text-stone-100 leading-snug mb-2 transition-colors">
                   {service.name}
                 </h3>
 
-                {service.targetBreedSize && (
-                  <p className="text-[10px] uppercase font-mono tracking-wider text-stone-400 font-bold mb-2">
-                    Breeds: {service.targetBreedSize}
-                  </p>
-                )}
-
-                <div className="flex items-center gap-4 text-xs font-mono text-stone-500 mb-4 border-b border-dashed border-stone-200 pb-3">
-                  <span className="font-bold text-charcoal text-sm">{service.price}</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {service.duration}
-                  </span>
-                </div>
-
-                <p className="text-stone-600 text-xs leading-relaxed mb-6 min-h-[48px]">
-                  {service.description}
+                <p className="text-stone-500 dark:text-stone-400 text-xs italic mb-4 font-serif transition-colors">
+                  {service.note}
                 </p>
 
-                {/* Checklist with bullet stars */}
-                <div className="space-y-2">
-                  <p className="text-[10px] font-bold tracking-wider text-stone-400 uppercase font-mono mb-2">Service details:</p>
+                <div className="space-y-3 flex-1 mb-6">
                   {service.includes.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-xs text-stone-600">
-                      <span className="text-terracotta select-none font-bold text-[10px] pt-0.5">🐾</span>
+                    <div key={idx} className="flex items-start gap-2 text-sm text-stone-600 dark:text-stone-300 transition-colors">
+                      <span className="text-terracotta select-none font-bold text-xs pt-0.5">🐾</span>
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Stamp button to book */}
-              <div className="p-6 pt-0 border-t border-stone-100/60 mt-6">
-                <button
-                  onClick={() => onSelectService(service.id)}
-                  className="w-full py-2.5 bg-sage text-white text-xs font-bold rounded-sm shadow-flat-sage hover:translate-y-[-1px] transition-all btn-stamp text-center cursor-pointer"
-                >
-                  Select &amp; Schedule
-                </button>
-              </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-
-        {/* Pricing Help note shaped as custom cardstock tag */}
-        <div className="mt-12 bg-amber-50/50 border border-amber-200/50 rounded-sm p-6 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-4 shadow-xs">
-          <HelpCircle className="w-8 h-8 text-amber-700 shrink-0" />
-          <div className="text-left">
-            <h4 className="font-bold text-charcoal text-sm font-serif">Pricing &amp; Size Note:</h4>
-            <p className="text-stone-500 text-xs leading-relaxed mt-1">
-              Prices are market estimates. Final charges may vary based on pet size, coat condition, and behavior. Please confirm with us at the time of booking. Base grooming rates are determined by weight and coat density. Let our stylists analyze your pet's photo in the AI Lab below for a precise recommendation!
-            </p>
-          </div>
         </div>
 
       </div>

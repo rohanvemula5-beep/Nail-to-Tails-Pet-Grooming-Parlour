@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { Appointment } from '../types';
 import { Calendar, Clock, Smile, Sparkles, Clipboard, ShieldAlert, CheckCircle, Trash2 } from 'lucide-react';
 import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
@@ -15,6 +16,8 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
   const [petName, setPetName] = useState('');
   const [petBreed, setPetBreed] = useState('');
   const [petType, setPetType] = useState<'dog' | 'cat' | 'other'>('dog');
+  const [location, setLocation] = useState('');
+  const [phone, setPhone] = useState('');
   const [serviceType, setServiceType] = useState<'bath_brush' | 'full_groom' | 'spa_package' | 'nail_trim'>('bath_brush');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -79,7 +82,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
     setIsSuccess(false);
 
     // Simple validation
-    if (!ownerName.trim() || !petName.trim() || !petBreed.trim() || !date || !time) {
+    if (!ownerName.trim() || !petName.trim() || !petBreed.trim() || !phone.trim() || !date || !time) {
       setErrorMessage('Please fill in all the required fields marked with an asterisk (*)');
       return;
     }
@@ -89,6 +92,8 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
       petName: petName.trim(),
       petBreed: petBreed.trim(),
       petType,
+      location: location.trim(),
+      phone: phone.trim(),
       serviceType,
       date,
       time,
@@ -127,6 +132,8 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
     setOwnerName('');
     setPetName('');
     setPetBreed('');
+    setLocation('');
+    setPhone('');
     setNotes('');
     setIsSuccess(true);
     
@@ -157,33 +164,35 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
 
   const getServiceName = (id: string) => {
     switch (id) {
-      case 'bath_brush': return 'Essential Bath & Brush';
-      case 'full_groom': return 'Tailored Styling & Cut';
-      case 'spa_package': return 'Royal Herbal Spa Treatment';
-      case 'nail_trim': return 'Nail & Paw Pedicure';
+      case 'bath_brush': return 'Basic Groom';
+      case 'full_groom': return 'Full Groom';
+      case 'spa_package': return 'Spa & Wellness';
+      case 'nail_trim': return 'Cat Grooming';
       default: return id;
     }
   };
 
   return (
-    <div className="py-20 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start border-b border-stone-200/50" id="booking-section">
+    <div className="py-24 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start border-b border-stone-200/50 dark:border-stone-800/50 transition-colors" id="booking-section">
       
       {/* Interactive Booking Booklet */}
-      <div className="lg:col-span-7 paper-card bg-white rounded-sm p-8 relative overflow-hidden" style={{ border: '1px solid #E6DFD3' }}>
-        
-        {/* Ribbon decoration */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sage via-terracotta to-amber-400" />
-        
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+        className="lg:col-span-7 bg-white dark:bg-stone-900 rounded-md p-8 relative overflow-hidden border border-stone-200 dark:border-stone-700 shadow-sm transition-colors"
+      >
         <div className="mb-6">
-          <div className="inline-flex items-center gap-1.5 text-sage font-mono text-xs font-semibold uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-1.5 text-sage font-mono text-xs font-semibold uppercase tracking-wider mb-1 transition-colors">
             <Clipboard className="w-3.5 h-3.5" />
             <span>Secure Salon Reservation</span>
           </div>
-          <h3 className="font-serif text-2xl font-normal italic text-charcoal">
+          <h3 className="font-serif text-2xl font-bold text-charcoal dark:text-stone-100 transition-colors">
             Book an Appointment
           </h3>
-          <p className="text-stone-500 text-xs mt-1">
-            Reserve your pet's premium experience. No prepayment needed — pay only after care is completed.
+          <p className="text-stone-500 dark:text-stone-400 text-xs mt-1 leading-relaxed transition-colors">
+            No prepayment needed – pay after your pet's groom. We will confirm your appointment via WhatsApp or phone call.
           </p>
         </div>
 
@@ -193,7 +202,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
             <div>
               <p className="font-bold">Reservation Confirmed!</p>
               <p className="text-xs text-emerald-700 mt-1">
-                We have registered your booking. A stylist from Nail to Tails will contact you shortly to confirm your pet's arrival time window.
+                We have registered your booking. A stylist from Nail to Tails will contact you via WhatsApp shortly to confirm your pet's arrival time window.
               </p>
             </div>
           </div>
@@ -216,9 +225,37 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
                 type="text"
                 value={ownerName}
                 onChange={(e) => setOwnerName(e.target.value)}
-                placeholder="e.g. Eleanor Vance"
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                placeholder="e.g. Rahul"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
                 required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-stone-500 font-bold mb-1.5">
+                Mobile / WhatsApp *
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="e.g. 90000 12345"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-stone-500 font-bold mb-1.5">
+                Area / Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Saroor Nagar"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
               />
             </div>
             <div>
@@ -229,8 +266,8 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
                 type="text"
                 value={petName}
                 onChange={(e) => setPetName(e.target.value)}
-                placeholder="e.g. Biscuit"
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                placeholder="e.g. Buddy"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
                 required
               />
             </div>
@@ -244,7 +281,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
               <select
                 value={petType}
                 onChange={(e) => setPetType(e.target.value as any)}
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
               >
                 <option value="dog">🐶 Dog</option>
                 <option value="cat">🐱 Cat</option>
@@ -259,8 +296,8 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
                 type="text"
                 value={petBreed}
                 onChange={(e) => setPetBreed(e.target.value)}
-                placeholder="e.g. Cavalier King Charles Spaniel"
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                placeholder="e.g. Shih Tzu"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
                 required
               />
             </div>
@@ -274,101 +311,99 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
               <select
                 value={serviceType}
                 onChange={(e) => setServiceType(e.target.value as any)}
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all font-medium text-charcoal"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm outline-none transition-all font-medium text-charcoal dark:text-stone-100"
               >
-                <option value="bath_brush">Bath &amp; Brush</option>
-                <option value="full_groom">Tailored Styling &amp; Cut</option>
-                <option value="spa_package">Royal Herbal Spa</option>
-                <option value="nail_trim">Nail &amp; Paw Pedicure</option>
+                <option value="bath_brush">Dog Grooming - Basic</option>
+                <option value="full_groom">Dog Grooming - Full</option>
+                <option value="spa_package">Spa &amp; Wellness</option>
+                <option value="nail_trim">Cat Grooming</option>
               </select>
             </div>
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-stone-500 font-bold mb-1.5 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-stone-400" />
-                Select Date *
+                Date *
               </label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all [color-scheme:light] dark:[color-scheme:dark]"
                 required
               />
             </div>
             <div>
               <label className="block text-xs font-mono uppercase tracking-wider text-stone-500 font-bold mb-1.5 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-stone-400" />
-                Arrival Window *
+                Time *
               </label>
               <select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all"
+                className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all"
                 required
               >
-                <option value="">Select window...</option>
-                <option value="08:30">Morning Early (08:30 AM)</option>
-                <option value="10:30">Morning Mid (10:30 AM)</option>
+                <option value="">Select time...</option>
+                <option value="08:30">Morning (08:30 AM)</option>
+                <option value="10:30">Mid Morning (10:30 AM)</option>
                 <option value="13:00">Early Afternoon (01:00 PM)</option>
                 <option value="15:00">Late Afternoon (03:00 PM)</option>
-                <option value="17:00">Evening Express (05:00 PM)</option>
+                <option value="17:00">Evening (05:00 PM)</option>
               </select>
             </div>
           </div>
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-stone-500 font-bold mb-1.5">
-              Special Styling Instructions or Allergies (Optional)
+              Additional Notes (Optional)
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Sensitive to lavender, prefers round teddy bear face cuts, nervous around hair dryers..."
+              placeholder="Any special styling instructions or allergies?"
               rows={3}
-              className="w-full bg-stone-50 border border-stone-200 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal outline-none transition-all resize-none"
+              className="w-full bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 focus:border-sage focus:ring-1 focus:ring-sage rounded p-2.5 text-sm text-charcoal dark:text-stone-100 outline-none transition-all resize-none"
             />
           </div>
 
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-3 bg-terracotta text-white font-bold rounded-sm shadow-flat-terracotta hover:translate-y-[-1px] transition-all btn-stamp text-center cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3 bg-terracotta text-white font-bold rounded-sm shadow-flat-terracotta hover:translate-y-[-1px] transition-all text-center cursor-pointer flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4.5 h-4.5" />
-              Secure My Salon Reservation
+              Book Appointment
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
 
       {/* Appointment Registry Display */}
-      <div className="lg:col-span-5 flex flex-col space-y-6">
-        
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="lg:col-span-5 flex flex-col space-y-6"
+      >
         {/* Salon Info Ticket */}
-        <div className="paper-card bg-amber-50/40 p-6 rounded-sm relative overflow-hidden text-left border border-amber-200/40 shadow-xs">
-          {/* Simulated punch holes on side */}
-          <div className="absolute top-0 right-4 h-full flex flex-col justify-between py-4 pointer-events-none opacity-20">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="w-3 h-3 bg-stone-200 rounded-full border border-stone-300" />
-            ))}
-          </div>
-
-          <div className="flex items-center gap-1 text-xs text-amber-800 font-mono font-bold tracking-wider uppercase mb-2">
+        <div className="bg-amber-50/40 dark:bg-amber-900/20 p-6 rounded-sm relative overflow-hidden text-left border border-amber-200/40 dark:border-amber-700/30 shadow-xs transition-colors">
+          <div className="flex items-center gap-1 text-xs text-amber-800 dark:text-amber-400 font-mono font-bold tracking-wider uppercase mb-2">
             <Smile className="w-4 h-4" />
             <span>Nails to Tails Registry</span>
           </div>
-          <h4 className="font-serif text-lg font-normal italic text-charcoal mb-3">Salon Guidelines</h4>
-          <ul className="space-y-2 text-xs text-stone-600 list-inside">
-            <li className="flex items-start gap-1.5"><span className="text-terracotta">🌸</span> <span>Appointments can be rearranged or canceled free of charge up to 12 hours prior.</span></li>
-            <li className="flex items-start gap-1.5"><span className="text-terracotta">🌸</span> <span>First-time pets receive a gentle 15-minute acclimatization walk before being placed on tables.</span></li>
-            <li className="flex items-start gap-1.5"><span className="text-terracotta">🌸</span> <span>All organic treatments include free complimentary nail grinding.</span></li>
+          <h4 className="font-serif text-lg font-bold text-charcoal dark:text-stone-100 mb-3 transition-colors">Salon Guidelines</h4>
+          <ul className="space-y-2 text-xs text-stone-600 dark:text-stone-300 list-inside transition-colors">
+            <li className="flex items-start gap-1.5"><span className="text-terracotta">🐾</span> <span>Appointments can be rearranged or canceled free of charge up to 12 hours prior.</span></li>
+            <li className="flex items-start gap-1.5"><span className="text-terracotta">🐾</span> <span>First-time pets receive a gentle 15-minute acclimatization walk before being placed on tables.</span></li>
+            <li className="flex items-start gap-1.5"><span className="text-terracotta">🐾</span> <span>All organic treatments include free complimentary nail grinding.</span></li>
           </ul>
         </div>
 
         {/* Live Appointment List */}
-        <div className="paper-card bg-[#FCFAF6] p-6 rounded-sm text-left" style={{ border: '1px solid #E6DFD3' }}>
-          <h4 className="font-serif text-lg font-normal italic text-charcoal border-b border-stone-200/60 pb-3 mb-4 flex items-center justify-between">
+        <div className="bg-[#FCFAF6] dark:bg-stone-800 p-6 rounded-sm text-left border border-stone-200 dark:border-stone-700 transition-colors">
+          <h4 className="font-serif text-lg font-bold text-charcoal dark:text-stone-100 border-b border-stone-200/60 dark:border-stone-700 pb-3 mb-4 flex items-center justify-between transition-colors">
             <span>Your Active Bookings</span>
             <span className="font-mono text-xs text-sage bg-sage/10 px-2.5 py-0.5 rounded-full font-bold">
               {appointments.length} Registered
@@ -386,7 +421,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
               {appointments.map((apt) => (
                 <div 
                   key={apt.id} 
-                  className="bg-white border border-stone-200/70 p-4 rounded-md relative shadow-xs hover:border-sage transition-colors"
+                  className="bg-white dark:bg-stone-900 border border-stone-200/70 dark:border-stone-700 p-4 rounded-md relative shadow-xs hover:border-sage transition-colors"
                 >
                   <button
                     onClick={() => handleDeleteAppointment(apt.id)}
@@ -399,12 +434,12 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
                   <div className="text-xs font-mono uppercase tracking-widest text-sage font-bold mb-1">
                     {getServiceName(apt.serviceType)}
                   </div>
-                  <h5 className="font-serif text-base font-bold text-charcoal">
+                  <h5 className="font-serif text-base font-bold text-charcoal dark:text-stone-100 transition-colors">
                     {apt.petName} <span className="text-stone-400 font-sans text-xs font-normal">({apt.petBreed})</span>
                   </h5>
-                  <p className="text-xs text-stone-500 mt-1">Owner: {apt.ownerName}</p>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 transition-colors">Owner: {apt.ownerName}</p>
 
-                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-dashed border-stone-100 text-xs font-mono text-stone-600">
+                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-dashed border-stone-100 dark:border-stone-700 text-xs font-mono text-stone-600 dark:text-stone-300 transition-colors">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 text-stone-400" />
                       {apt.date}
@@ -416,7 +451,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
                   </div>
 
                   {apt.notes && (
-                    <div className="mt-2 bg-stone-50 border border-stone-100 rounded px-2.5 py-1.5 text-[11px] text-stone-500 leading-relaxed italic">
+                    <div className="mt-2 bg-stone-50 dark:bg-stone-800 border border-stone-100 dark:border-stone-700 rounded px-2.5 py-1.5 text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed italic transition-colors">
                       “{apt.notes}”
                     </div>
                   )}
@@ -425,7 +460,7 @@ export default function BookingForm({ selectedServiceId, onServiceBooked }: Book
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
     </div>
   );
